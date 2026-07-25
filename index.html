@@ -158,10 +158,12 @@
 
   .sidebar-bottom{
     font-family:'IBM Plex Mono', monospace;
-    font-size:0.82rem;
+    font-size:1rem;
   }
   .sidebar-bottom a{
-    display:block;
+    display:flex;
+    align-items:center;
+    gap:8px;
     text-decoration:none;
     color:var(--ink-soft);
     padding:6px 0;
@@ -169,6 +171,12 @@
     transition:color .15s ease;
   }
   .sidebar-bottom a:hover, .sidebar-bottom a:focus-visible{ color:var(--ledger); }
+  .sidebar-bottom a img{
+    width:36px;
+    height:36px;
+    flex-shrink:0;
+    object-fit:contain;
+  }
 
   main{
     flex:1;
@@ -487,9 +495,9 @@
     </div>
 
     <div class="sidebar-bottom">
-      <a href="mailto:semucas27@gmail.com">semucas27@gmail.com</a>
-      <a href="https://github.com/Semucas" target="_blank" rel="noopener">github.com/Semucas</a>
-      <a href="https://www.linkedin.com/in/semucas/" target="_blank" rel="noopener">linkedin.com/in/semucas</a>
+      <a href="mailto:semucas27@gmail.com"><img src="assets/mail-icon.png" alt="">semucas27@gmail.com</a>
+      <a href="https://github.com/Semucas" target="_blank" rel="noopener"><img src="assets/github.png" alt="">github.com/Semucas</a>
+      <a href="https://www.linkedin.com/in/semucas/" target="_blank" rel="noopener"><img src="assets/linkedin.png" alt="">linkedin.com/in/semucas</a>
     </div>
   </aside>
 
