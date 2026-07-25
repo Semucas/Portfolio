@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sebastián Muñoz — Ingeniería &amp; Negocio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213D;
+    --ink-soft:#2B3B5C;
+    --paper:#F3F3EF;
+    --paper-raised:#FFFFFF;
+    --slate:#5C6270;
+    --rule:#D8D6CE;
+    --ledger:#2F6F5E;
+    --ledger-deep:#1E4A3F;
+    --ledger-tint:#E4EEEA;
+    --max:960px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+
+  h1,h2,h3{
+    font-family:'Newsreader', serif;
+    font-weight:500;
+    margin:0;
+    color:var(--ink);
+  }
+
+  a{color:inherit;}
+
+  .caption{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ledger-deep);
+  }
+
+  /* LAYOUT */
+  .layout{
+    display:flex;
+    max-width:1280px;
+    margin:0 auto;
+  }
+
+  .sidebar{
+    position:sticky;
+    top:0;
+    height:100vh;
+    width:280px;
+    flex-shrink:0;
+    padding:48px 32px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    border-right:1px solid var(--rule);
+  }
+
+  .avatar{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    background:var(--ledger-tint);
+    border:1.5px solid var(--ledger);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Newsreader', serif;
+    font-size:1.3rem;
+    color:var(--ledger-deep);
+    margin-bottom:18px;
+    overflow:hidden;
+  }
+  .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .sidebar-top .name{
+    font-size:1.5rem;
+    line-height:1.25;
+  }
+  .sidebar-top .role{
+    margin-top:10px;
+    font-size:0.95rem;
+    color:var(--slate);
+    max-width:22ch;
+  }
+
+  .lang-toggle{
+    margin-top:22px;
+    display:inline-flex;
+    align-items:center;
+    gap:0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    border:1px solid var(--ledger);
+    border-radius:14px;
+    overflow:hidden;
+    background:var(--paper-raised);
+  }
+  .lang-toggle button{
+    border:none;
+    background:transparent;
+    padding:6px 14px;
+    cursor:pointer;
+    color:var(--slate);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.05em;
+    transition:background .15s ease, color .15s ease;
+  }
+  .lang-toggle button.active{
+    background:var(--ledger-deep);
+    color:var(--paper-raised);
+  }
+  .lang-toggle button:focus-visible{ outline:2px solid var(--ledger-deep); outline-offset:2px; }
+
+  nav.index{
+    margin-top:40px;
+  }
+  nav.index a{
+    display:flex;
+    gap:12px;
+    align-items:baseline;
+    text-decoration:none;
+    padding:9px 0;
+    font-size:0.92rem;
+    color:var(--slate);
+    border-bottom:1px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  nav.index a .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--rule);
+    width:20px;
+  }
+  nav.index a:hover, nav.index a:focus-visible, nav.index a.active{
+    color:var(--ledger-deep);
+  }
+  nav.index a.active .num{ color:var(--ledger); }
+
+  .sidebar-bottom{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.82rem;
+  }
+  .sidebar-bottom a{
+    display:block;
+    text-decoration:none;
+    color:var(--ink-soft);
+    padding:6px 0;
+    border-bottom:1px dashed var(--rule);
+    transition:color .15s ease;
+  }
+  .sidebar-bottom a:hover, .sidebar-bottom a:focus-visible{ color:var(--ledger); }
+
+  main{
+    flex:1;
+    min-width:0;
+    padding:48px 56px 120px;
+  }
+
+  section{
+    max-width:var(--max);
+    padding-top:64px;
+    scroll-margin-top:24px;
+  }
+  section:first-of-type{ padding-top:8px; }
+
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:14px;
+    margin-bottom:32px;
+  }
+  .section-head .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--ledger);
+    letter-spacing:0.1em;
+  }
+  .section-head h2{ font-size:1.7rem; }
+
+  /* HERO */
+  .hero h1{
+    font-size:2.6rem;
+    line-height:1.2;
+    max-width:18ch;
+  }
+  .hero .lede{
+    margin-top:22px;
+    max-width:62ch;
+    font-size:1.08rem;
+    color:var(--ink-soft);
+  }
+  .hero .highlight{
+    background:linear-gradient(to bottom, transparent 60%, var(--ledger-tint) 60%);
+  }
+  .stat-row{
+    margin-top:36px;
+    display:flex;
+    gap:36px;
+    flex-wrap:wrap;
+  }
+  .stat{
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .stat .n{
+    font-family:'Newsreader', serif;
+    font-size:1.6rem;
+    color:var(--ledger-deep);
+    display:block;
+  }
+  .stat .l{
+    font-size:0.72rem;
+    color:var(--slate);
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+
+  /* ENTRY (experience / education) */
+  .entry{
+    display:grid;
+    grid-template-columns:140px 1fr;
+    gap:24px;
+    padding:22px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .entry:last-child{ border-bottom:none; }
+  .entry .when{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--slate);
+    padding-top:2px;
+  }
+  .entry .role{
+    font-size:1.08rem;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .entry .org{
+    color:var(--ledger-deep);
+    font-size:0.92rem;
+    margin-top:2px;
+  }
+  .entry p{
+    margin:10px 0 0;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+    max-width:58ch;
+  }
+  .entry .tags{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .entry .tags span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    color:var(--ledger-deep);
+    background:var(--ledger-tint);
+    padding:3px 8px;
+    border-radius:2px;
+  }
+  .grade-flag{
+    display:inline-block;
+    margin-top:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    color:var(--ledger-deep);
+    border:1px solid var(--ledger);
+    padding:2px 8px;
+    border-radius:2px;
+  }
+
+  /* PROJECTS */
+  .project{
+    position:relative;
+    border:1px solid var(--rule);
+    background:var(--paper-raised);
+    padding:28px 30px;
+    margin-bottom:26px;
+  }
+  .project .stamp{
+    position:absolute;
+    top:22px;
+    right:26px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.12em;
+    color:var(--ledger);
+    border:1.5px solid var(--ledger);
+    padding:5px 10px;
+    border-radius:3px;
+    transform:rotate(4deg);
+    opacity:0.85;
+  }
+  .project h3{ font-size:1.28rem; max-width:70%; }
+  .project .stack{
+    margin-top:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--slate);
+  }
+  .project .case{
+    margin-top:16px;
+    display:grid;
+    gap:10px;
+  }
+  .project .case div{ font-size:0.93rem; }
+  .project .case .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ledger-deep);
+    display:block;
+    margin-bottom:2px;
+  }
+  .project .links{
+    margin-top:18px;
+    display:flex;
+    gap:18px;
+  }
+  .project .links a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.8rem;
+    text-decoration:none;
+    color:var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:1px;
+  }
+  .project .links a:hover, .project .links a:focus-visible{ color:var(--ledger-deep); border-color:var(--ledger-deep); }
+
+  /* SKILLS */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+  }
+  .skill-cell{
+    background:var(--paper-raised);
+    padding:22px 24px;
+  }
+  .skill-cell h4{
+    font-family:'Newsreader', serif;
+    font-weight:600;
+    font-size:1.05rem;
+    margin-bottom:10px;
+  }
+  .skill-cell ul{
+    margin:0;
+    padding-left:18px;
+    font-size:0.9rem;
+    color:var(--ink-soft);
+  }
+  .skill-cell li{ margin-bottom:5px; }
+
+  /* CONTACT */
+  .contact-box{
+    border:1px solid var(--rule);
+    padding:40px;
+    background:var(--paper-raised);
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+  .contact-box h2{ font-size:1.7rem; max-width:20ch; }
+  .cta{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+    text-decoration:none;
+    color:var(--paper-raised);
+    background:var(--ledger-deep);
+    padding:14px 22px;
+    border-radius:3px;
+    transition:background .15s ease;
+  }
+  .cta:hover, .cta:focus-visible{ background:var(--ledger); }
+
+  footer{
+    max-width:var(--max);
+    padding:40px 0 0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--slate);
+  }
+
+  /* MOBILE NAV */
+  .mobile-bar{ display:none; }
+  .mobile-lang{ display:none; }
+
+  @media (max-width: 860px){
+    .layout{ flex-direction:column; }
+    .sidebar{
+      position:sticky;
+      height:auto;
+      width:auto;
+      flex-direction:row;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 20px;
+      border-right:none;
+      border-bottom:1px solid var(--rule);
+      background:var(--paper);
+      z-index:10;
+    }
+    .sidebar-top{ display:flex; align-items:center; gap:12px; }
+    .avatar{ width:40px; height:40px; font-size:0.95rem; margin-bottom:0; }
+    .sidebar-top .role, nav.index, .sidebar-bottom, .lang-toggle{ display:none; }
+    .mobile-lang{ display:inline-flex; }
+    main{ padding:32px 20px 100px; }
+    .entry{ grid-template-columns:1fr; gap:6px; }
+    .skills-grid{ grid-template-columns:1fr; }
+    .project h3{ max-width:100%; }
+    .project .stamp{ position:static; display:inline-block; margin-top:10px; transform:rotate(0deg); }
+    .contact-box{ flex-direction:column; align-items:flex-start; }
+    .mobile-bar{
+      display:flex;
+      gap:14px;
+      overflow-x:auto;
+      font-family:'IBM Plex Mono', monospace;
+      font-size:0.75rem;
+      padding:0 20px 14px;
+    }
+    .mobile-bar a{ text-decoration:none; color:var(--slate); white-space:nowrap; }
+  }
+
+  .fade-in{
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeIn .6s ease forwards;
+  }
+  @keyframes fadeIn{ to{ opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="avatar" aria-hidden="true">SM</div>
+      <div>
+        <div class="name">Sebastián Muñoz</div>
+        <div class="role" data-i18n="role"></div>
+        <div class="lang-toggle" role="group" aria-label="Idioma / Language">
+          <button type="button" data-lang="es" aria-pressed="true">ES</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <nav class="index" id="indexNav">
+        <a href="#perfil" data-target="perfil"><span class="num">01</span> <span data-i18n="nav_perfil"></span></a>
+        <a href="#experiencia" data-target="experiencia"><span class="num">02</span> <span data-i18n="nav_experiencia"></span></a>
+        <a href="#educacion" data-target="educacion"><span class="num">03</span> <span data-i18n="nav_educacion"></span></a>
+        <a href="#proyectos" data-target="proyectos"><span class="num">04</span> <span data-i18n="nav_proyectos"></span></a>
+        <a href="#habilidades" data-target="habilidades"><span class="num">05</span> <span data-i18n="nav_habilidades"></span></a>
+        <a href="#contacto" data-target="contacto"><span class="num">06</span> <span data-i18n="nav_contacto"></span></a>
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+      <a href="mailto:semucas27@gmail.com">semucas27@gmail.com</a>
+      <a href="https://github.com/Semucas" target="_blank" rel="noopener">github.com/Semucas</a>
+      <a href="https://www.linkedin.com/in/semucas/" target="_blank" rel="noopener">linkedin.com/in/semucas</a>
+    </div>
+  </aside>
+
+  <main>
+
+    <div class="mobile-bar">
+      <a href="#perfil" data-i18n="nav_perfil"></a>
+      <a href="#experiencia" data-i18n="nav_experiencia"></a>
+      <a href="#educacion" data-i18n="nav_educacion"></a>
+      <a href="#proyectos" data-i18n="nav_proyectos"></a>
+      <a href="#habilidades" data-i18n="nav_habilidades"></a>
+      <a href="#contacto" data-i18n="nav_contacto"></a>
+      <span class="lang-toggle mobile-lang" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" aria-pressed="true">ES</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </span>
+    </div>
+
+    <section id="perfil" class="hero fade-in">
+      <div class="caption" data-i18n="folio_01"></div>
+      <h1 style="margin-top:14px;">
+        <span data-i18n="hero_h1_a"></span> <span class="highlight" data-i18n="hero_h1_b"></span>
+      </h1>
+      <p class="lede" data-i18n="hero_lede"></p>
+
+      <div class="stat-row">
+        <div class="stat"><span class="n">4.4</span><span class="l" data-i18n="stat_gpa"></span></div>
+        <div class="stat"><span class="n">5+</span><span class="l" data-i18n="stat_tutor"></span></div>
+        <div class="stat"><span class="n">100%</span><span class="l" data-i18n="stat_saberpro"></span></div>
+        <div class="stat"><span class="n">2</span><span class="l" data-i18n="stat_projects"></span></div>
+      </div>
+    </section>
+
+    <section id="experiencia" class="fade-in">
+      <div class="section-head">
+        <span class="tag" data-i18n="folio_02"></span>
+        <h2 data-i18n="nav_experiencia"></h2>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="exp1_when"></div>
+        <div>
+          <div class="role" data-i18n="exp1_role"></div>
+          <div class="org" data-i18n="exp1_org"></div>
+          <p data-i18n="exp1_desc"></p>
+          <div class="tags"><span data-i18n="exp1_tag1"></span><span data-i18n="exp1_tag2"></span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="exp2_when"></div>
+        <div>
+          <div class="role" data-i18n="exp2_role"></div>
+          <div class="org" data-i18n="exp2_org"></div>
+          <p data-i18n="exp2_desc"></p>
+          <div class="tags"><span data-i18n="exp2_tag1"></span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="exp3_when"></div>
+        <div>
+          <div class="role" data-i18n="exp3_role"></div>
+          <div class="org" data-i18n="exp3_org"></div>
+          <p data-i18n="exp3_desc"></p>
+          <div class="tags"><span data-i18n="exp3_tag1"></span><span data-i18n="exp3_tag2"></span></div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="exp4_when"></div>
+        <div>
+          <div class="role" data-i18n="exp4_role"></div>
+          <div class="org" data-i18n="exp4_org"></div>
+          <p data-i18n="exp4_desc"></p>
+          <div class="tags"><span data-i18n="exp4_tag1"></span><span data-i18n="exp4_tag2"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="educacion" class="fade-in">
+      <div class="section-head">
+        <span class="tag" data-i18n="folio_03"></span>
+        <h2 data-i18n="nav_educacion"></h2>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="edu1_when"></div>
+        <div>
+          <div class="role" data-i18n="edu1_role"></div>
+          <div class="org" data-i18n="edu1_org"></div>
+          <p data-i18n="edu1_desc"></p>
+          <span class="grade-flag" data-i18n="grade"></span>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="edu2_when"></div>
+        <div>
+          <div class="role" data-i18n="edu2_role"></div>
+          <div class="org" data-i18n="edu2_org"></div>
+          <p data-i18n="edu2_desc"></p>
+          <span class="grade-flag" data-i18n="grade"></span>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="edu3_when"></div>
+        <div>
+          <div class="role" data-i18n="edu3_role"></div>
+          <div class="org" data-i18n="edu3_org"></div>
+          <p data-i18n="edu3_desc"></p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when" data-i18n="edu4_when"></div>
+        <div>
+          <div class="role" data-i18n="edu4_role"></div>
+          <div class="org" data-i18n="edu4_org"></div>
+          <p data-i18n="edu4_desc"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="proyectos" class="fade-in">
+      <div class="section-head">
+        <span class="tag" data-i18n="folio_04"></span>
+        <h2 data-i18n="nav_proyectos"></h2>
+      </div>
+
+      <div class="project">
+        <span class="stamp" data-i18n="proj1_stamp"></span>
+        <h3 data-i18n="proj1_title"></h3>
+        <div class="stack" data-i18n="proj1_stack"></div>
+        <div class="case">
+          <div><span class="k" data-i18n="k_problema"></span><span data-i18n="proj1_problema"></span></div>
+          <div><span class="k" data-i18n="k_solucion"></span><span data-i18n="proj1_solucion"></span></div>
+          <div><span class="k" data-i18n="k_seguridad"></span><span data-i18n="proj1_seguridad"></span></div>
+        </div>
+        <div class="links">
+          <a href="https://ecommerce-astro.semucas27.workers.dev" target="_blank" rel="noopener" data-i18n="proj1_demo"></a>
+          <a href="https://github.com/Semucas/Proyecto-Final---Plataformas-de-programaci-n-empresarial" target="_blank" rel="noopener" data-i18n="proj1_code"></a>
+        </div>
+      </div>
+
+      <div class="project">
+        <span class="stamp" data-i18n="proj2_stamp"></span>
+        <h3 data-i18n="proj2_title"></h3>
+        <div class="stack" data-i18n="proj2_stack"></div>
+        <div class="case">
+          <div><span class="k" data-i18n="k_problema"></span><span data-i18n="proj2_problema"></span></div>
+          <div><span class="k" data-i18n="k_solucion"></span><span data-i18n="proj2_solucion"></span></div>
+        </div>
+        <div class="links">
+          <a href="https://github.com/Semucas/tadb_202610_examen_05_PowerBI" target="_blank" rel="noopener" data-i18n="proj2_code"></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="habilidades" class="fade-in">
+      <div class="section-head">
+        <span class="tag" data-i18n="folio_05"></span>
+        <h2 data-i18n="nav_habilidades"></h2>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-cell">
+          <h4 data-i18n="sk1_title"></h4>
+          <ul>
+            <li data-i18n="sk1_1"></li>
+            <li data-i18n="sk1_2"></li>
+            <li data-i18n="sk1_3"></li>
+            <li data-i18n="sk1_4"></li>
+          </ul>
+        </div>
+        <div class="skill-cell">
+          <h4 data-i18n="sk2_title"></h4>
+          <ul>
+            <li data-i18n="sk2_1"></li>
+            <li data-i18n="sk2_2"></li>
+            <li data-i18n="sk2_3"></li>
+            <li data-i18n="sk2_4"></li>
+          </ul>
+        </div>
+        <div class="skill-cell">
+          <h4 data-i18n="sk3_title"></h4>
+          <ul>
+            <li data-i18n="sk3_1"></li>
+            <li data-i18n="sk3_2"></li>
+            <li data-i18n="sk3_3"></li>
+            <li data-i18n="sk3_4"></li>
+          </ul>
+        </div>
+        <div class="skill-cell">
+          <h4 data-i18n="sk4_title"></h4>
+          <ul>
+            <li data-i18n="sk4_1"></li>
+            <li data-i18n="sk4_2"></li>
+            <li data-i18n="sk4_3"></li>
+            <li data-i18n="sk4_4"></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto" class="fade-in">
+      <div class="section-head">
+        <span class="tag" data-i18n="folio_06"></span>
+        <h2 data-i18n="nav_contacto"></h2>
+      </div>
+
+      <div class="contact-box">
+        <h2 data-i18n="contact_h2"></h2>
+        <a class="cta" href="mailto:semucas27@gmail.com" data-i18n="contact_cta"></a>
+      </div>
+    </section>
+
+    <footer data-i18n="footer"></footer>
+
+  </main>
+</div>
+
+<script>
+  const dict = {
+    role: { es:"Ingeniería de Sistemas e Informática + Ingeniería Administrativa", en:"Systems and Informatics Engineering + Administrative Engineering" },
+    nav_perfil: { es:"Perfil", en:"Profile" },
+    nav_experiencia: { es:"Experiencia", en:"Experience" },
+    nav_educacion: { es:"Educación", en:"Education" },
+    nav_proyectos: { es:"Proyectos", en:"Projects" },
+    nav_habilidades: { es:"Habilidades", en:"Skills" },
+    nav_contacto: { es:"Contacto", en:"Contact" },
+
+    folio_01: { es:"Folio 01 — Perfil", en:"File 01 — Profile" },
+    folio_02: { es:"Folio 02", en:"File 02" },
+    folio_03: { es:"Folio 03", en:"File 03" },
+    folio_04: { es:"Folio 04", en:"File 04" },
+    folio_05: { es:"Folio 05", en:"File 05" },
+    folio_06: { es:"Folio 06", en:"File 06" },
+
+    hero_h1_a: { es:"Ingeniería y negocio,", en:"Engineering and business," },
+    hero_h1_b: { es:"en la misma ecuación.", en:"in the same equation." },
+    hero_lede: {
+      es:"Estudiante de Ingeniería de Sistemas e Informática e Ingeniería Administrativa en la Universidad Pontificia Bolivariana, con puntaje perfecto en razonamiento cuantitativo en el Saber Pro. Más de cinco años enseñando programación, estadística y analítica de datos como tutor independiente, con experiencia adicional en soporte de TI y optimización de procesos de negocio. Disciplinado, orientado a retos, y con proyectos ya en producción — un e-commerce full-stack y un dashboard de análisis de datos.",
+      en:"Systems and Informatics Engineering and Administrative Engineering student at Universidad Pontificia Bolivariana, with a perfect score in quantitative reasoning on the Saber Pro national exam. Over five years teaching programming, statistics, and data analytics as an independent tutor, with additional experience in IT support and business process optimization. Disciplined, driven by challenges, with projects already in production — a full-stack e-commerce site and a data analytics dashboard."
+    },
+    stat_gpa: { es:"Promedio acumulado", en:"Cumulative GPA" },
+    stat_tutor: { es:"Años de tutoría STEM", en:"Years of STEM tutoring" },
+    stat_saberpro: { es:"Razon. cuant. Saber Pro", en:"Saber Pro quant. reasoning" },
+    stat_projects: { es:"Proyectos en producción", en:"Projects in production" },
+
+    exp1_when: { es:"Ene 2021 —<br>Presente", en:"Jan 2021 —<br>Present" },
+    exp1_role: { es:"Tutor Independiente — STEM &amp; Analytics", en:"Independent Tutor — STEM &amp; Analytics" },
+    exp1_org: { es:"Self-employed · Medellín, Colombia", en:"Self-employed · Medellín, Colombia" },
+    exp1_desc: {
+      es:"Enseñanza personalizada en Matemáticas, Estadística, Programación y Data Analytics a estudiantes universitarios. Diseño de planes de estudio y material de preparación a la medida. Gestión directa de clientes durante más de cinco años.",
+      en:"Personalized instruction in Mathematics, Statistics, Programming, and Data Analytics for university students. Designed custom study plans and prep materials. Direct client management for over five years."
+    },
+    exp1_tag1: { es:"Quantitative Analytics", en:"Quantitative Analytics" },
+    exp1_tag2: { es:"Teaching", en:"Teaching" },
+
+    exp2_when: { es:"Jun 2023 —<br>Presente", en:"Jun 2023 —<br>Present" },
+    exp2_role: { es:"IT Support Technician", en:"IT Support Technician" },
+    exp2_org: { es:"Productora Natural de Alimentos SAS · Freelance", en:"Productora Natural de Alimentos SAS · Freelance" },
+    exp2_desc: {
+      es:"Soporte técnico y mantenimiento de infraestructura de hardware y software, asegurando la continuidad operativa de los sistemas de la compañía.",
+      en:"Technical support and maintenance of hardware and software infrastructure, ensuring operational continuity of the company's systems."
+    },
+    exp2_tag1: { es:"Information Technology", en:"Information Technology" },
+
+    exp3_when: { es:"Ene 2025 —<br>Jul 2025", en:"Jan 2025 —<br>Jul 2025" },
+    exp3_role: { es:"Process Engineering Intern", en:"Process Engineering Intern" },
+    exp3_org: { es:"Solvo Global · Medellín, Colombia", en:"Solvo Global · Medellín, Colombia" },
+    exp3_desc: {
+      es:"Apoyo al equipo de Mejora Continua en el mapeo y optimización de procesos internos de negocio.",
+      en:"Supported the Continuous Improvement team in mapping and optimizing internal business processes."
+    },
+    exp3_tag1: { es:"Microsoft Excel", en:"Microsoft Excel" },
+    exp3_tag2: { es:"Business Process Improvement", en:"Business Process Improvement" },
+
+    exp4_when: { es:"Jul 2022 —<br>Nov 2022", en:"Jul 2022 —<br>Nov 2022" },
+    exp4_role: { es:"Differential Calculus Teaching Assistant", en:"Differential Calculus Teaching Assistant" },
+    exp4_org: { es:"Universidad Pontificia Bolivariana", en:"Universidad Pontificia Bolivariana" },
+    exp4_desc: {
+      es:"Sesiones de tutoría y apoyo académico en Cálculo Diferencial, fortaleciendo habilidades matemáticas fundamentales y aplicadas en estudiantes de pregrado.",
+      en:"Delivered tutoring sessions and academic support in Differential Calculus, strengthening undergraduate students' foundational and applied math skills."
+    },
+    exp4_tag1: { es:"Teaching", en:"Teaching" },
+    exp4_tag2: { es:"Communication", en:"Communication" },
+
+    edu1_when: { es:"Ene 2022 —<br>Nov 2026", en:"Jan 2022 —<br>Nov 2026" },
+    edu1_role: { es:"Ingeniería de Sistemas e Informática", en:"B.S. in Systems and Informatics Engineering" },
+    edu1_org: { es:"Universidad Pontificia Bolivariana", en:"Universidad Pontificia Bolivariana" },
+    edu1_desc: {
+      es:"Cursos en desarrollo de software, aplicaciones móviles, analítica de datos, programación web, calidad de software y sistemas empresariales.",
+      en:"Coursework in software development, mobile applications, data analytics, web programming, software quality, and enterprise systems."
+    },
+
+    edu2_when: { es:"Ene 2020 —<br>Abr 2026", en:"Jan 2020 —<br>Apr 2026" },
+    edu2_role: { es:"Ingeniería Administrativa", en:"B.S. in Administrative Engineering" },
+    edu2_org: { es:"Universidad Pontificia Bolivariana", en:"Universidad Pontificia Bolivariana" },
+    edu2_desc: {
+      es:"Puntaje perfecto en el módulo de Razonamiento Cuantitativo del examen estandarizado nacional Saber Pro.",
+      en:"Achieved a perfect score in the Quantitative Reasoning module of the Saber Pro national standardized exam."
+    },
+    grade: { es:"Promedio 4.4 / 5.0", en:"GPA 4.4 / 5.0" },
+
+    edu3_when: { es:"Jul 2022 —<br>En curso", en:"Jul 2022 —<br>Ongoing" },
+    edu3_role: { es:"Programación &amp; Desarrollo de Software", en:"Programming &amp; Software Development" },
+    edu3_org: { es:"Platzi", en:"Platzi" },
+    edu3_desc: {
+      es:"Cursos en lógica de programación, desarrollo web y móvil, ingeniería de software, Business Intelligence e Inteligencia Artificial.",
+      en:"Courses in programming logic, web and mobile development, software engineering, Business Intelligence, and Artificial Intelligence."
+    },
+
+    edu4_when: { es:"2014 —<br>2020", en:"2014 —<br>2020" },
+    edu4_role: { es:"Programa de Inglés", en:"English Language Program" },
+    edu4_org: { es:"Universidad EAFIT", en:"Universidad EAFIT" },
+    edu4_desc: {
+      es:"Programa completo de inglés, con desarrollo de comunicación profesional oral y escrita.",
+      en:"Completed a full English language program, developing professional-level oral and written communication skills."
+    },
+
+    folio_04b: { es:"", en:"" },
+
+    proj1_stamp: { es:"En producción", en:"In production" },
+    proj1_title: { es:"Láminas Mundial 2026 — E-commerce", en:"Láminas Mundial 2026 — E-commerce" },
+    proj1_stack: { es:"Astro · Cloudflare Workers/Pages · Supabase · Bootstrap", en:"Astro · Cloudflare Workers/Pages · Supabase · Bootstrap" },
+    k_problema: { es:"Problema", en:"Problem" },
+    k_solucion: { es:"Solución", en:"Solution" },
+    k_seguridad: { es:"Seguridad", en:"Security" },
+    proj1_problema: {
+      es:"E-commerce con catálogo que cambia constantemente y necesidad de un panel administrativo propio.",
+      en:"E-commerce with a constantly changing catalog and the need for a custom admin panel."
+    },
+    proj1_solucion: {
+      es:"Arquitectura híbrida: SSR en Cloudflare Workers para la tienda pública con datos frescos en cada request, y SSG en Cloudflare Pages para el panel admin con autenticación, CRUD y almacenamiento de imágenes vía Supabase.",
+      en:"Hybrid architecture: SSR on Cloudflare Workers for the public store with fresh data on every request, and SSG on Cloudflare Pages for the admin panel with authentication, CRUD, and image storage via Supabase."
+    },
+    proj1_seguridad: {
+      es:"Row Level Security con principio de mínimo privilegio: lectura pública, escritura solo autenticada.",
+      en:"Row Level Security with a least-privilege principle: public reads, authenticated-only writes."
+    },
+    proj1_demo: { es:"Ver demo →", en:"View demo →" },
+    proj1_code: { es:"Ver código →", en:"View code →" },
+
+    proj2_stamp: { es:"Completo", en:"Complete" },
+    proj2_title: { es:"Dashboard Power BI — Flota eléctrica", en:"Power BI Dashboard — Electric Fleet" },
+    proj2_stack: { es:"MySQL 8.0 · Docker · Power BI · SQL", en:"MySQL 8.0 · Docker · Power BI · SQL" },
+    proj2_problema: {
+      es:"Analizar el comportamiento del estado de carga (SoC) de baterías en una flota de buses escolares eléctricos según distancia, pasajeros y velocidad.",
+      en:"Analyze battery state-of-charge (SoC) behavior across a fleet of electric school buses based on distance, passenger count, and speed."
+    },
+    proj2_solucion: {
+      es:"Modelo de datos normalizado en 3NF sobre MySQL desplegado en Docker, con vistas, funciones y procedimientos almacenados, conectado a Power BI mediante un usuario de solo lectura.",
+      en:"3NF-normalized data model on MySQL deployed in Docker, with views, functions, and stored procedures, connected to Power BI via a read-only user."
+    },
+    proj2_code: { es:"Ver código →", en:"View code →" },
+
+    sk1_title: { es:"Desarrollo de Software", en:"Software Development" },
+    sk1_1: { es:"Astro, JavaScript / TypeScript", en:"Astro, JavaScript / TypeScript" },
+    sk1_2: { es:"Arquitecturas híbridas SSR / SSG", en:"Hybrid SSR / SSG architectures" },
+    sk1_3: { es:"SQL, MySQL, diseño normalizado (3NF)", en:"SQL, MySQL, normalized design (3NF)" },
+    sk1_4: { es:"Docker, Git", en:"Docker, Git" },
+
+    sk2_title: { es:"Datos &amp; Analytics", en:"Data &amp; Analytics" },
+    sk2_1: { es:"Power BI, modelado de datos", en:"Power BI, data modeling" },
+    sk2_2: { es:"Análisis cuantitativo", en:"Quantitative analysis" },
+    sk2_3: { es:"Supabase (Postgres, Auth, Storage)", en:"Supabase (Postgres, Auth, Storage)" },
+    sk2_4: { es:"Dashboards e interpretación de métricas", en:"Dashboards and metrics interpretation" },
+
+    sk3_title: { es:"Negocio &amp; Procesos", en:"Business &amp; Process" },
+    sk3_1: { es:"Análisis de procesos de negocio", en:"Business process analysis" },
+    sk3_2: { es:"Mejora continua", en:"Continuous improvement" },
+    sk3_3: { es:"Ingeniería Administrativa", en:"Administrative Engineering" },
+    sk3_4: { es:"Mentalidad emprendedora", en:"Entrepreneurial mindset" },
+
+    sk4_title: { es:"Comunicación &amp; Soporte", en:"Communication &amp; Support" },
+    sk4_1: { es:"Enseñanza de temas técnicos", en:"Teaching technical subjects" },
+    sk4_2: { es:"Soporte técnico e infraestructura", en:"Technical support and infrastructure" },
+    sk4_3: { es:"Inglés profesional", en:"Professional English" },
+    sk4_4: { es:"Gestión de clientes freelance", en:"Freelance client management" },
+
+    contact_h2: { es:"¿Tienes un proyecto en mente? Conversemos.", en:"Have a project in mind? Let's talk." },
+    contact_cta: { es:"Escríbeme →", en:"Email me →" },
+
+    footer: { es:"Sebastián Muñoz — Medellín, Colombia · Actualizado 2026", en:"Sebastián Muñoz — Medellín, Colombia · Updated 2026" }
+  };
+
+  let currentLang = 'es';
+
+  function applyLang(lang){
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const entry = dict[el.dataset.i18n];
+      if(entry) el.innerHTML = entry[lang];
+    });
+    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+      const isActive = btn.dataset.lang === lang;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  document.querySelectorAll('.lang-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+
+  applyLang('es');
+
+  const links = document.querySelectorAll('nav.index a');
+  const sections = Array.from(links).map(l => document.getElementById(l.dataset.target));
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const link = document.querySelector(`nav.index a[data-target="${entry.target.id}"]`);
+      if(entry.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => s && obs.observe(s));
+</script>
+
+</body>
+</html>
