@@ -67,7 +67,7 @@
     height:100vh;
     width:280px;
     flex-shrink:0;
-    padding:48px 32px;
+    padding:48px 18px;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
@@ -158,7 +158,7 @@
 
   .sidebar-bottom{
     font-family:'IBM Plex Mono', monospace;
-    font-size:1rem;
+    font-size:0.92rem;
   }
   .sidebar-bottom a{
     display:flex;
@@ -169,11 +169,12 @@
     padding:6px 0;
     border-bottom:1px dashed var(--rule);
     transition:color .15s ease;
+    overflow-wrap:anywhere;
   }
   .sidebar-bottom a:hover, .sidebar-bottom a:focus-visible{ color:var(--ledger); }
   .sidebar-bottom a img{
-    width:36px;
-    height:36px;
+    width:28px;
+    height:28px;
     flex-shrink:0;
     object-fit:contain;
   }
