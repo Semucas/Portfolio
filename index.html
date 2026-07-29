@@ -19,6 +19,7 @@
     --ledger:#2F6F5E;
     --ledger-deep:#1E4A3F;
     --ledger-tint:#E4EEEA;
+    --error:#B3261E;
     --max:960px;
   }
 
@@ -394,12 +395,34 @@
     padding:40px;
     background:var(--paper-raised);
     display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    flex-wrap:wrap;
+    flex-direction:column;
+    align-items:flex-start;
     gap:24px;
   }
-  .contact-box h2{ font-size:1.7rem; max-width:20ch; }
+  .contact-box h2{ font-size:1.7rem; max-width:32ch; }
+  .contact-form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    width:100%;
+    max-width:480px;
+  }
+  .contact-form input,
+  .contact-form textarea{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.95rem;
+    color:var(--ink);
+    background:var(--paper);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:12px 14px;
+    resize:vertical;
+  }
+  .contact-form input:focus,
+  .contact-form textarea:focus{
+    outline:none;
+    border-color:var(--ledger);
+  }
   .cta{
     display:inline-block;
     font-family:'IBM Plex Mono', monospace;
@@ -409,10 +432,25 @@
     color:var(--paper-raised);
     background:var(--ledger-deep);
     padding:14px 22px;
+    border:none;
     border-radius:3px;
+    cursor:pointer;
+    align-self:flex-start;
     transition:background .15s ease;
   }
   .cta:hover, .cta:focus-visible{ background:var(--ledger); }
+  .cta:disabled{
+    opacity:0.6;
+    cursor:not-allowed;
+    background:var(--ledger-deep);
+  }
+  .form-status{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    min-height:1.2em;
+  }
+  .form-status.success{ color:var(--ledger-deep); }
+  .form-status.error{ color:var(--error); }
 
   footer{
     max-width:var(--max);
@@ -450,7 +488,7 @@
     .skills-grid{ grid-template-columns:1fr; }
     .project h3{ max-width:100%; }
     .project .stamp{ position:static; display:inline-block; margin-top:10px; transform:rotate(0deg); }
-    .contact-box{ flex-direction:column; align-items:flex-start; }
+    .contact-form{ max-width:100%; }
     .mobile-bar{
       display:flex;
       gap:14px;
@@ -709,7 +747,13 @@
 
       <div class="contact-box">
         <h2 data-i18n="contact_h2"></h2>
-        <a class="cta" href="mailto:semucas27@gmail.com" data-i18n="contact_cta"></a>
+        <form id="contactForm" class="contact-form" novalidate>
+          <input type="text" name="name" data-i18n-placeholder="contact_ph_name" required>
+          <input type="email" name="email" data-i18n-placeholder="contact_ph_email" required>
+          <textarea name="message" rows="4" data-i18n-placeholder="contact_ph_message" required></textarea>
+          <button type="submit" class="cta" data-i18n="contact_cta"></button>
+          <div class="form-status" id="contactStatus" role="status" aria-live="polite"></div>
+        </form>
       </div>
     </section>
 
@@ -879,7 +923,13 @@
     sk4_4: { es:"Gestión de clientes freelance", en:"Freelance client management" },
 
     contact_h2: { es:"¿Tienes un proyecto en mente? Conversemos.", en:"Have a project in mind? Let's talk." },
-    contact_cta: { es:"Escríbeme →", en:"Email me →" },
+    contact_cta: { es:"Enviar mensaje →", en:"Send message →" },
+    contact_ph_name: { es:"Tu nombre", en:"Your name" },
+    contact_ph_email: { es:"Tu correo electrónico", en:"Your email" },
+    contact_ph_message: { es:"Tu mensaje", en:"Your message" },
+    contact_sending: { es:"Enviando…", en:"Sending…" },
+    contact_success: { es:"¡Mensaje enviado! Te responderé pronto.", en:"Message sent! I'll get back to you soon." },
+    contact_error: { es:"Hubo un error al enviar. Intenta de nuevo o escríbeme a semucas27@gmail.com.", en:"Something went wrong. Please try again or email me at semucas27@gmail.com." },
 
     footer: { es:"Sebastián Muñoz — Medellín, Colombia · Actualizado 2026", en:"Sebastián Muñoz — Medellín, Colombia · Updated 2026" }
   };
@@ -892,6 +942,10 @@
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const entry = dict[el.dataset.i18n];
       if(entry) el.innerHTML = entry[lang];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const entry = dict[el.dataset.i18nPlaceholder];
+      if(entry) el.setAttribute('placeholder', entry[lang]);
     });
     document.querySelectorAll('.lang-toggle button').forEach(btn => {
       const isActive = btn.dataset.lang === lang;
@@ -920,6 +974,44 @@
   }, { rootMargin: '-20% 0px -70% 0px' });
 
   sections.forEach(s => s && obs.observe(s));
+
+  const contactForm = document.getElementById('contactForm');
+  const contactStatus = document.getElementById('contactStatus');
+  const contactSubmitBtn = contactForm.querySelector('button[type="submit"]');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(contactForm);
+    const payload = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+    };
+
+    contactSubmitBtn.disabled = true;
+    contactStatus.className = 'form-status';
+    contactStatus.textContent = dict.contact_sending[currentLang];
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if(!res.ok) throw new Error('request failed');
+
+      contactStatus.textContent = dict.contact_success[currentLang];
+      contactStatus.classList.add('success');
+      contactForm.reset();
+    } catch(err){
+      contactStatus.textContent = dict.contact_error[currentLang];
+      contactStatus.classList.add('error');
+    } finally {
+      contactSubmitBtn.disabled = false;
+    }
+  });
 </script>
 
 </body>
