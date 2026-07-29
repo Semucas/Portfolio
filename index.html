@@ -961,6 +961,7 @@
     contact_sending: { es:"Enviando…", en:"Sending…" },
     contact_success: { es:"¡Mensaje enviado! Te responderé pronto.", en:"Message sent! I'll get back to you soon." },
     contact_error: { es:"Hubo un error al enviar. Intenta de nuevo o escríbeme a semucas27@gmail.com.", en:"Something went wrong. Please try again or email me at semucas27@gmail.com." },
+    contact_error_email: { es:"Ese correo no parece válido. Revísalo e intenta de nuevo.", en:"That email doesn't look valid. Please check it and try again." },
 
     footer: { es:"Sebastián Muñoz — Medellín, Colombia · Actualizado 2026", en:"Sebastián Muñoz — Medellín, Colombia · Updated 2026" }
   };
@@ -1009,9 +1010,16 @@
   const contactForm = document.getElementById('contactForm');
   const contactStatus = document.getElementById('contactStatus');
   const contactSubmitBtn = contactForm.querySelector('button[type="submit"]');
+  const contactEmailInput = contactForm.querySelector('input[name="email"]');
 
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if(!contactEmailInput.checkValidity()){
+      contactStatus.className = 'form-status error';
+      contactStatus.textContent = dict.contact_error_email[currentLang];
+      return;
+    }
 
     const formData = new FormData(contactForm);
     const payload = {
