@@ -4,6 +4,8 @@ export default async function handler(req, res) {
     return;
   }
 
+  console.log('contact body received:', JSON.stringify(req.body), 'typeof:', typeof req.body);
+
   const { name, email, message } = req.body || {};
 
   if (!name || !email || !message) {
