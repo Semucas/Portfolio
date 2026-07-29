@@ -247,6 +247,24 @@
     letter-spacing:0.06em;
     text-transform:uppercase;
   }
+  .like-stat{
+    background:none;
+    border:none;
+    padding:0;
+    margin:0;
+    font:inherit;
+    text-align:left;
+    cursor:pointer;
+  }
+  .like-stat .n{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .like-icon{ display:inline-flex; width:18px; height:18px; }
+  .like-icon svg{ width:100%; height:100%; }
+  .like-stat:not(:disabled):hover .n{ color:var(--ledger); }
+  .like-stat:disabled{ cursor:default; }
 
   /* ENTRY (experience / education) */
   .entry{
@@ -576,6 +594,10 @@
         <div class="stat"><span class="n">5+</span><span class="l" data-i18n="stat_tutor"></span></div>
         <div class="stat"><span class="n">100%</span><span class="l" data-i18n="stat_saberpro"></span></div>
         <div class="stat"><span class="n">2</span><span class="l" data-i18n="stat_projects"></span></div>
+        <button type="button" class="stat like-stat" id="likeBtn" aria-pressed="false">
+          <span class="n"><span class="like-icon" id="likeIcon" aria-hidden="true"></span><span id="likeCount">—</span></span>
+          <span class="l" data-i18n="stat_like"></span>
+        </button>
       </div>
     </section>
 
@@ -797,6 +819,7 @@
     stat_tutor: { es:"Años de tutoría STEM", en:"Years of STEM tutoring" },
     stat_saberpro: { es:"Razon. cuant. Saber Pro", en:"Saber Pro quant. reasoning" },
     stat_projects: { es:"Proyectos en producción", en:"Projects in production" },
+    stat_like: { es:"Dale like", en:"Give it a like" },
 
     exp1_when: { es:"Ene 2021 —<br>Presente", en:"Jan 2021 —<br>Present" },
     exp1_role: { es:"Tutor Independiente — STEM &amp; Analytics", en:"Independent Tutor — STEM &amp; Analytics" },
@@ -1018,6 +1041,66 @@
       contactStatus.classList.add('error');
     } finally {
       contactSubmitBtn.disabled = false;
+    }
+  });
+
+  const SUPABASE_URL = 'https://xuzfvoggrfmacxgwdzri.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1emZ2b2dncmZtYWN4Z3dkenJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzMDMxNDMsImV4cCI6MjEwMDg3OTE0M30.i3YXZEDb2xTn_u4O0rPyGH4cJd2zVic17TnrrXpAE6I';
+
+  const likeBtn = document.getElementById('likeBtn');
+  const likeCount = document.getElementById('likeCount');
+  const likeIcon = document.getElementById('likeIcon');
+
+  const THUMB_OUTLINE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75A2.25 2.25 0 0 1 16.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904M14.25 9h2.25M5.904 18.75c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 10.203 4.167 9.75 5 9.75h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"/></svg>';
+  const THUMB_SOLID = '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M1 8.25a1.25 1.25 0 1 1 2.5 0v7.5a1.25 1.25 0 1 1-2.5 0v-7.5ZM11 3V1.7c0-.268.14-.526.395-.607A2 2 0 0 1 14 3c0 .995-.182 1.948-.514 2.826-.204.54.166 1.174.744 1.174h2.52c1.243 0 2.261 1.01 2.146 2.247a23.864 23.864 0 0 1-1.341 5.974C17.153 16.323 16.072 17 14.9 17h-3.192a3 3 0 0 1-1.341-.317l-2.734-1.366A3 3 0 0 0 6.292 15H5V8h.963c.685 0 1.258-.483 1.612-1.068a4.011 4.011 0 0 1 2.166-1.73c.432-.143.853-.386 1.011-.814.16-.432.248-.9.248-1.388Z"/></svg>';
+
+  function setLikedUI(liked){
+    likeIcon.innerHTML = liked ? THUMB_SOLID : THUMB_OUTLINE;
+    likeBtn.disabled = liked;
+    likeBtn.setAttribute('aria-pressed', liked ? 'true' : 'false');
+  }
+
+  async function loadLikeCount(){
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/portfolio_likes?select=count&id=eq.main`, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      });
+      const data = await res.json();
+      if(Array.isArray(data) && data[0] && typeof data[0].count === 'number'){
+        likeCount.textContent = data[0].count;
+      }
+    } catch(err){
+      // deja el placeholder si falla la carga inicial
+    }
+  }
+
+  setLikedUI(localStorage.getItem('portfolioLiked') === 'true');
+  loadLikeCount();
+
+  likeBtn.addEventListener('click', async () => {
+    if(localStorage.getItem('portfolioLiked') === 'true') return;
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_portfolio_like`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      const newCount = typeof data === 'number' ? data : (Array.isArray(data) ? data[0] : data && data.count);
+
+      if(typeof newCount === 'number') likeCount.textContent = newCount;
+      localStorage.setItem('portfolioLiked', 'true');
+      setLikedUI(true);
+    } catch(err){
+      // si falla, el boton sigue habilitado para reintentar
     }
   });
 </script>
