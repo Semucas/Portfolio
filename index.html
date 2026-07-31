@@ -248,9 +248,10 @@
     text-transform:uppercase;
   }
   .like-stat{
-    background:none;
-    border:none;
-    padding:0;
+    background:var(--ledger-tint);
+    border:1px solid var(--ledger);
+    border-radius:8px;
+    padding:10px 18px;
     margin:0;
     font:inherit;
     text-align:left;
@@ -259,10 +260,22 @@
   .like-stat .n{
     display:flex;
     align-items:center;
-    gap:6px;
+    gap:8px;
+    font-size:2.1rem;
   }
-  .like-icon{ display:inline-flex; width:18px; height:18px; }
+  .like-icon{ display:inline-flex; width:24px; height:24px; }
   .like-icon svg{ width:100%; height:100%; }
+  .like-standalone{
+    max-width:var(--max);
+    padding-top:64px;
+    display:flex;
+    justify-content:center;
+  }
+  .like-stat--lg{ padding:22px 44px; }
+  .like-stat--lg .n{ font-size:3.2rem; gap:12px; }
+  .like-stat--lg .like-icon{ width:38px; height:38px; }
+  .like-stat--lg .l{ font-size:0.8rem; }
+  .like-stat:not(:disabled):hover{ background:var(--ledger-tint); border-color:var(--ledger-deep); }
   .like-stat:not(:disabled):hover .n{ color:var(--ledger); }
   .like-stat:disabled{ cursor:default; }
 
@@ -593,11 +606,6 @@
         <div class="stat"><span class="n">4.4</span><span class="l" data-i18n="stat_gpa"></span></div>
         <div class="stat"><span class="n">5+</span><span class="l" data-i18n="stat_tutor"></span></div>
         <div class="stat"><span class="n">100%</span><span class="l" data-i18n="stat_saberpro"></span></div>
-        <div class="stat"><span class="n">2</span><span class="l" data-i18n="stat_projects"></span></div>
-        <button type="button" class="stat like-stat" id="likeBtn" aria-pressed="false">
-          <span class="n"><span class="like-icon" id="likeIcon" aria-hidden="true"></span><span id="likeCount">—</span></span>
-          <span class="l" data-i18n="stat_like"></span>
-        </button>
       </div>
     </section>
 
@@ -697,6 +705,16 @@
       </div>
 
       <div class="project">
+        <span class="stamp" data-i18n="proj3_stamp"></span>
+        <h3 data-i18n="proj3_title"></h3>
+        <div class="stack" data-i18n="proj3_stack"></div>
+        <div class="case">
+          <div><span class="k" data-i18n="k_problema"></span><span data-i18n="proj3_problema"></span></div>
+          <div><span class="k" data-i18n="k_solucion"></span><span data-i18n="proj3_solucion"></span></div>
+        </div>
+      </div>
+
+      <div class="project">
         <span class="stamp" data-i18n="proj1_stamp"></span>
         <h3 data-i18n="proj1_title"></h3>
         <div class="stack" data-i18n="proj1_stack"></div>
@@ -787,6 +805,13 @@
       </div>
     </section>
 
+    <div class="like-standalone">
+      <button type="button" class="stat like-stat like-stat--lg" id="likeBtn" aria-pressed="false">
+        <span class="n"><span class="like-icon" id="likeIcon" aria-hidden="true"></span><span id="likeCount">—</span></span>
+        <span class="l" data-i18n="stat_like"></span>
+      </button>
+    </div>
+
     <footer data-i18n="footer"></footer>
 
   </main>
@@ -794,7 +819,7 @@
 
 <script>
   const dict = {
-    role: { es:"Ingeniería de Sistemas e Informática + Ingeniería Administrativa", en:"Systems and Informatics Engineering + Administrative Engineering" },
+    role: { es:"Estudiante de Ingeniería de Sistemas e Informática · Ingeniero Administrador", en:"Systems and Informatics Engineering Student · Administrative Engineer" },
     nav_perfil: { es:"Perfil", en:"Profile" },
     nav_experiencia: { es:"Experiencia", en:"Experience" },
     nav_educacion: { es:"Educación", en:"Education" },
@@ -812,17 +837,16 @@
     hero_h1_a: { es:"Ingeniería y negocio,", en:"Engineering and business," },
     hero_h1_b: { es:"en la misma ecuación.", en:"in the same equation." },
     hero_lede: {
-      es:"Estudiante de Ingeniería de Sistemas e Informática e Ingeniería Administrativa en la Universidad Pontificia Bolivariana, con puntaje perfecto en razonamiento cuantitativo en el Saber Pro. Más de cinco años enseñando programación, estadística y analítica de datos como tutor independiente, con experiencia adicional en soporte de TI y optimización de procesos de negocio. Disciplinado, orientado a retos, y con proyectos ya en producción — un e-commerce full-stack y un dashboard de análisis de datos.",
-      en:"Systems and Informatics Engineering and Administrative Engineering student at Universidad Pontificia Bolivariana, with a perfect score in quantitative reasoning on the Saber Pro national exam. Over five years teaching programming, statistics, and data analytics as an independent tutor, with additional experience in IT support and business process optimization. Disciplined, driven by challenges, with projects already in production — a full-stack e-commerce site and a data analytics dashboard."
+      es:"Estudiante de Ingeniería de Sistemas e Informática e Ingeniero Administrador, graduado de la Universidad Pontificia Bolivariana, con puntaje perfecto en razonamiento cuantitativo en el Saber Pro. Me apasiona la programación, el software, la analítica de datos y las matemáticas. Más de cinco años enseñando programación, estadística y analítica de datos como tutor independiente, con experiencia adicional en soporte de TI y optimización de procesos de negocio. Disciplinado y orientado a retos.",
+      en:"Systems and Informatics Engineering student and graduated Administrative Engineer from Universidad Pontificia Bolivariana, with a perfect score in quantitative reasoning on the Saber Pro national exam. I'm passionate about programming, software, data analytics, and mathematics. Over five years teaching programming, statistics, and data analytics as an independent tutor, with additional experience in IT support and business process optimization. Disciplined and driven by challenges."
     },
     stat_gpa: { es:"Promedio acumulado", en:"Cumulative GPA" },
-    stat_tutor: { es:"Años de tutoría STEM", en:"Years of STEM tutoring" },
+    stat_tutor: { es:"Años de tutoría", en:"Years of tutoring" },
     stat_saberpro: { es:"Razon. cuant. Saber Pro", en:"Saber Pro quant. reasoning" },
-    stat_projects: { es:"Proyectos en producción", en:"Projects in production" },
     stat_like: { es:"Dale like", en:"Give it a like" },
 
     exp1_when: { es:"Ene 2021 —<br>Presente", en:"Jan 2021 —<br>Present" },
-    exp1_role: { es:"Tutor Independiente — STEM &amp; Analytics", en:"Independent Tutor — STEM &amp; Analytics" },
+    exp1_role: { es:"Tutor Independiente — Matemáticas y Analítica", en:"Independent Tutor — Math & Analytics" },
     exp1_org: { es:"Self-employed · Medellín, Colombia", en:"Self-employed · Medellín, Colombia" },
     exp1_desc: {
       es:"Enseñanza personalizada en Matemáticas, Estadística, Programación y Data Analytics a estudiantes universitarios. Diseño de planes de estudio y material de preparación a la medida. Gestión directa de clientes durante más de cinco años.",
@@ -869,7 +893,7 @@
     },
 
     edu2_when: { es:"Ene 2020 —<br>Abr 2026", en:"Jan 2020 —<br>Apr 2026" },
-    edu2_role: { es:"Ingeniería Administrativa", en:"B.S. in Administrative Engineering" },
+    edu2_role: { es:"Ingeniero en Ingeniería Administrativa", en:"Administrative Engineer" },
     edu2_org: { es:"Universidad Pontificia Bolivariana", en:"Universidad Pontificia Bolivariana" },
     edu2_desc: {
       es:"Puntaje perfecto en el módulo de Razonamiento Cuantitativo del examen estandarizado nacional Saber Pro.",
@@ -895,7 +919,7 @@
 
     folio_04b: { es:"", en:"" },
 
-    proj1_stamp: { es:"En producción", en:"In production" },
+    proj1_stamp: { es:"Completo", en:"Complete" },
     proj1_title: { es:"Láminas Mundial 2026 — E-commerce", en:"Láminas Mundial 2026 — E-commerce" },
     proj1_stack: { es:"Astro · Cloudflare Workers/Pages · Supabase · Bootstrap", en:"Astro · Cloudflare Workers/Pages · Supabase · Bootstrap" },
     k_problema: { es:"Problema", en:"Problem" },
@@ -928,6 +952,18 @@
       en:"3NF-normalized data model on MySQL deployed in Docker, with views, functions, and stored procedures, connected to Power BI via a read-only user."
     },
     proj2_code: { es:"Ver código →", en:"View code →" },
+
+    proj3_stamp: { es:"En proceso", en:"In progress" },
+    proj3_title: { es:"Automatización de cálculo de costos de producción — Pronatural Foods", en:"Production Cost Calculation Automation — Pronatural Foods" },
+    proj3_stack: { es:"Excel avanzado", en:"Advanced Excel" },
+    proj3_problema: {
+      es:"Proceso manual y repetitivo para calcular el costo de producción, sin centralización de parámetros ni control de vigencia por fechas.",
+      en:"Manual, repetitive process for calculating production cost, with no centralized parameters and no date-based validity control."
+    },
+    proj3_solucion: {
+      es:"Sistema en Excel que centraliza los parámetros de costeo (con control de vigencia por fechas), calcula automáticamente el costo unitario de cada corrida de producción, y presenta los resultados en un dashboard consolidado con indicadores clave y alertas de calidad de datos. Incluye validaciones cruzadas que confirman que los cálculos automatizados reproducen fielmente los resultados del proceso manual anterior.",
+      en:"Excel-based system that centralizes costing parameters (with date-based validity control), automatically calculates the unit cost of each production run, and presents results in a consolidated dashboard with key indicators and data-quality alerts. Includes cross-validations confirming that the automated calculations faithfully reproduce the results of the previous manual process."
+    },
 
     sk1_title: { es:"Desarrollo de Software", en:"Software Development" },
     sk1_1: { es:"Astro, JavaScript / TypeScript", en:"Astro, JavaScript / TypeScript" },
